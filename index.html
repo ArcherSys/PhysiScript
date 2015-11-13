@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>FireScript</title>
+<script src="acorn.js"></script>
+<script src="interpreter.js"></script>
+
+<script src="blockly/blockly_compressed.js"></script>
+<script src="blockly/blocks_compressed.js"></script>
+<script src="blockly/msg/js/en.js"></script>
+<script src="blockly/javascript_compressed.js"></script>
+<script src="jquery.js"></script>
+<link href="bootstrap-tour/build/css/bootstrap-tour-standalone.min.css" rel="stylesheet"/>
+<script src="bootstrap-tour/build/js/bootstrap-tour-standalone.min.js"></script>
+<script src="Physi.js"></script>
+
+</head>
+<body>
+    <h1>FireScript</h1>
+    <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+    <canvas id="artboard"></canvas>
+    <xml id="toolbox" style="display: none">
+   <category name="Variables" custom="VARIABLE"></category>
+   <category name="Procedures" custom="PROCEDURE"></category>
+    <category name="Logic">
+        <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+      <block type="logic_boolean"></block>
+      <block type="logic_ternary"></block>
+    </category>
+    <category name="Colors" colour="20">
+        <block type="colour_picker"></block>
+        <block type="colour_random"></block>
+        <block type="colour_rgb"></block>
+        <block type="colour_blend"></block>
+    </category>
+    <category name="Text">
+        <block type="text"></block>
+         <block type="text_print"></block>
+    </category>
+ <category name="Lists">
+     <block type="lists_create_empty"></block>
+     <block type="lists_create_with"></block>
+     <block type="lists_repeat"><value type="NUM"><shadow type="text"></shadow></value></block>
+     <block type="lists_length"></block>
+     <block type="lists_isEmpty"></block>
+         
+     </category>
+  
+  
+ 
+</xml>
+<button id="Run">Run Code</button>
+<textarea id="textarea"></textarea>
+<script>
+  var workspace = Blockly.inject('blocklyDiv',
+      {toolbox: document.getElementById('toolbox')});
+    function myUpdateFunction() {
+  var code = Blockly.JavaScript.workspaceToCode(workspace);
+  window.document.getElementById('textarea').value = code;
+}
+function initAlert(interpreter, scope) {
+      var wrapper = function(text) {
+        text = text ? text.toString() : '';
+        return interpreter.createPrimitive(alert(text));
+      };
+      interpreter.setProperty(scope, 'alert',
+          interpreter.createNativeFunction(wrapper));
+    };
+workspace.addChangeListener(myUpdateFunction);
+
+$("#Run").click(function(){
+
+var codeInt = new Interpreter($("#textarea").val(),initAlert);
+codeInt.run();
+});
+</script>
+</body>
+</html>
