@@ -1,10 +1,19 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>FireScript</title>
+<title>PhysiScript
+</title>
 <script src="acorn.js"></script>
 <script src="interpreter.js"></script>
-
+<style type="text/css" media="screen">
+    #textarea { 
+        position: relative;
+          
+   float: right;
+   width: 40%;
+   height: 50%;
+    }
+    </style>
 <script src="blockly/blockly_compressed.js"></script>
 <script src="blockly/blocks_compressed.js"></script>
 <script src="blockly/msg/js/en.js"></script>
@@ -13,15 +22,27 @@
 <link href="bootstrap-tour/build/css/bootstrap-tour-standalone.min.css" rel="stylesheet"/>
 <script src="bootstrap-tour/build/js/bootstrap-tour-standalone.min.js"></script>
 <script src="Physi.js"></script>
-
+<link rel="stylesheet" href="codemirror/lib/codemirror.css">
+<script src="codemirror/lib/codemirror.js"></script>
 </head>
 <body>
-    <h1>FireScript</h1>
+    <h1>PhysiScript</h1>
     <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
     <canvas id="artboard"></canvas>
     <xml id="toolbox" style="display: none">
-   <category name="Variables" custom="VARIABLE"></category>
+    <category name="HTML5 Canvas API">
+        <block type="getcanvas"></block>
+        <block type="getcontext"></block>
+        <block type="ctxfillstyle"></block>
+        <block type="ctxfillrect"></block>
+    </category>
+   <category name="Variables" id="VarBlocks" custom="VARIABLE"></category>
    <category name="Procedures" custom="PROCEDURE"></category>
+   <category name="Math">
+       <block type="math_number">
+           
+       </block>
+   </category>
     <category name="Logic">
         <block type="logic_compare"></block>
       <block type="logic_operation"></block>
@@ -48,31 +69,30 @@
      </category>
   
   
- 
+ <category name="Controls">
+     <block type="controls_if_else"></block>
+ </category>
 </xml>
 <button id="Run">Run Code</button>
 <textarea id="textarea"></textarea>
+
 <script>
   var workspace = Blockly.inject('blocklyDiv',
       {toolbox: document.getElementById('toolbox')});
+       var editor = CodeMirror.fromTextArea(window.document.getElementById('textarea'), {
+    lineNumbers: true
+  });
+
     function myUpdateFunction() {
   var code = Blockly.JavaScript.workspaceToCode(workspace);
   window.document.getElementById('textarea').value = code;
 }
-function initAlert(interpreter, scope) {
-      var wrapper = function(text) {
-        text = text ? text.toString() : '';
-        return interpreter.createPrimitive(alert(text));
-      };
-      interpreter.setProperty(scope, 'alert',
-          interpreter.createNativeFunction(wrapper));
-    };
+
 workspace.addChangeListener(myUpdateFunction);
 
 $("#Run").click(function(){
-
-var codeInt = new Interpreter($("#textarea").val(),initAlert);
-codeInt.run();
+var CodeBox = [];
+eval($("#textarea").val());
 });
 </script>
 </body>
